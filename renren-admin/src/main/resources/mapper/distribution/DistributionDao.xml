@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.distribution.dao.DistributionDao">
+
+    <insert id="insertDistribution" parameterType="io.renren.modules.distribution.entity.Distribution">
+    INSERT INTO tb_distribution (
+	id,
+	focus_on_pop,
+	focus_on_red,
+	share_red_envelopes,
+	distribution_series,
+	activity_theme,
+	trigger_keywords,
+	wechat_description,
+	thumbnail,
+	virtual_popularity,
+	music,
+	auto_play_music,
+	phone,
+	target_quantity,
+	product_price,
+	no_payment_num,
+	max_value,
+	min_value,
+	red_rules,
+	red_envelopes_name,
+	red_envelopes_blessings,
+	one_key_concern,
+	wechat_pic,
+	template_style,
+	activity_rules,
+	activity_name,
+	activity_type,
+	start_time,
+	end_time,
+	qr_img,
+	update_user,
+	activity_state,
+	head_image,
+	create_time
+)
+VALUES
+	(
+		#{id,jdbcType=VARCHAR},
+		#{focusOnPop,jdbcType=INTEGER},
+		#{focusOnRed,jdbcType=INTEGER},
+		#{shareRedEnvelopes,jdbcType=INTEGER},
+		#{distributionSeries,jdbcType=INTEGER},
+		#{activityTheme,jdbcType=VARCHAR},
+		#{triggerKeywords,jdbcType=VARCHAR},
+		#{wechatDescription,jdbcType=VARCHAR},
+		#{thumbnail,jdbcType=VARCHAR},
+		#{virtualPopularity,jdbcType=INTEGER},
+		#{music,jdbcType=VARCHAR},
+		#{autoPlayMusic,jdbcType=INTEGER},
+		#{phone,jdbcType=VARCHAR},
+		#{targetQuantity,jdbcType=VARCHAR},
+		#{productPrice,jdbcType=VARCHAR},
+		#{noPaymentNum,jdbcType=VARCHAR},
+		#{maxValue,jdbcType=VARCHAR},
+		#{minValue,jdbcType=VARCHAR},
+		#{redRules,jdbcType=VARCHAR},
+		#{redEnvelopesName,jdbcType=VARCHAR},
+		#{redEnvelopesBlessings,jdbcType=VARCHAR},
+		#{oneKeyConcern,jdbcType=VARCHAR},
+		#{wechatPic,jdbcType=VARCHAR},
+		#{templateStyle,jdbcType=VARCHAR},
+		#{activityRules,jdbcType=VARCHAR},
+		#{activityName,jdbcType=VARCHAR},
+		#{activityType,jdbcType=VARCHAR},
+		#{startTime,jdbcType=VARCHAR},
+		#{endTime,jdbcType=VARCHAR},
+		#{qrImg,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		#{activityState,jdbcType=VARCHAR},
+		#{headImage,jdbcType=VARCHAR},
+		SYSDATE()
+	)
+    </insert>
+
+	<insert id="insertActivity" parameterType="io.renren.modules.activity.entity.ActivityEntity">
+		INSERT INTO tb_activity(id,
+ activity_name,
+ activity_type,
+ thumbnail,
+ start_time,
+ end_time,
+ prize_num,
+ template_id,
+ prize_left,
+ create_user,
+ create_time,
+ activity_state)
+	VALUES(
+		#{id,jdbcType=VARCHAR},
+		#{activityName,jdbcType=VARCHAR},
+		#{activityType,jdbcType=VARCHAR},
+		#{thumbnail,jdbcType=VARCHAR},
+		#{startTime,jdbcType=VARCHAR},
+		#{endTime,jdbcType=VARCHAR},
+		#{prizeNum,jdbcType=INTEGER},
+		#{templateId,jdbcType=VARCHAR},
+		#{prizeLeft,jdbcType=INTEGER},
+		#{createUser,jdbcType=VARCHAR},
+		SYSDATE(),
+		#{activityState,jdbcType=VARCHAR})
+	</insert>
+
+
+	<update id="updateActivity" parameterType="io.renren.modules.activity.entity.ActivityEntity">
+		update tb_activity
+		<set>
+			<if test="activityName!= null">
+				activity_name =  #{activityName,jdbcType=VARCHAR},
+			</if>
+			<if test="thumbnail!= null">
+				thumbnail =  #{thumbnail,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime!= null">
+				start_time =  #{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="prizeNum!= null">
+				prize_num =  #{prizeNum,jdbcType=INTEGER},
+			</if>
+			<if test="prizeLeft!= null">
+				prize_left =  #{prizeLeft,jdbcType=INTEGER},
+			</if>
+			<if test="endTime!= null">
+				end_time =  #{endTime,jdbcType=VARCHAR},
+			</if>
+				update_time =  SYSDATE()
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+
+	</update>
+
+    <select id="queryById" parameterType="java.lang.String"
+            resultType="io.renren.modules.distribution.entity.Distribution">
+		select * from tb_distribution where id = #{id}
+	</select>
+
+	<select id="queryList" parameterType="java.util.HashMap"
+			resultType="io.renren.modules.distribution.entity.Distribution">
+		select t.*,count(ord.order_id) order_num,ifnull(sum(ord.total_price),0) total_price from tb_distribution t
+		left join tb_order ord on ord.activity_id = t.id and ord.order_status = 3
+		group by t.id
+		order by t.create_time desc
+	</select>
+
+	<select id="queryListByPage" parameterType="java.util.HashMap"
+			resultType="io.renren.modules.distribution.entity.Distribution">
+		select t.*,count(1) order_num,ifnull(sum(ord.total_price),0) total_price from tb_distribution t
+		left join tb_order ord on ord.activity_id = t.id
+		group by t.id
+		order by t.update_time desc
+		limit #{pageNum},#{pageSize}
+	</select>
+
+	<select id="queryActivity" parameterType="java.util.HashMap"
+			resultType="io.renren.modules.activity.entity.ActivityEntity">
+		select t.activity_name,t.activity_type,t.start_time,t.end_time,t.thumbnail,if(str_to_date(t.end_time, '%Y-%m-%d')>NOW(),'进行中','已结束') activity_state
+		from tb_activity t
+		order by t.update_time desc
+		limit #{pageNum},#{pageSize}
+	</select>
+
+    <update id="rollback" parameterType="java.lang.String">
+        update tb_distribution
+        <set>
+            target_quantity = target_quantity + 1,
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="release" parameterType="java.lang.String">
+        update tb_distribution
+        <set>
+            target_quantity = target_quantity - 1,
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+	<update id="addWatcher" parameterType="io.renren.modules.distribution.entity.Distribution">
+		update tb_distribution
+		<set>
+		<if test="watcher!= null">
+			watcher =  concat(concat(#{watcher,jdbcType=VARCHAR},','),IFNULL(watcher,'')),
+		</if>
+
+			visits = visits + 1
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteActivity"  parameterType = "java.util.List">
+	delete from tb_activity  where  id in
+	<foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+	</foreach>
+	</delete>
+</mapper>

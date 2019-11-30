@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.gather.dao.GatherDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.gather.entity.GatherEntity" id="gatherMap">
+        <result property="id" column="id"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="priceNum" column="price_num"/>
+        <result property="targetNum" column="target_num"/>
+        <result property="restrictTime" column="restrict_time"/>
+        <result property="priceDescription" column="price_description"/>
+        <result property="activityRule" column="activity_rule"/>
+        <result property="priceInfo" column="price_info"/>
+        <result property="companyDescription" column="company_description"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="discount" column="discount"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="qrImg" column="qr_img"/>
+        <result property="gift" column="gift"/>
+        <result property="headImage" column="head_image"/>
+        <result property="phone" column="phone"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+    </resultMap>
+
+    <insert id="insertPrizeLog" parameterType="io.renren.modules.gather.entity.PrizeEntity">
+    INSERT INTO tb_prize_log(id,
+    activity_id,
+    likes,
+    user_id,
+    complete_time,
+    state,
+    prize_num,
+    prize_time,
+    create_time)
+    VALUES(
+    #{id,jdbcType=VARCHAR},
+    #{activityId,jdbcType=VARCHAR},
+    #{likes,jdbcType=VARCHAR},
+    #{userId,jdbcType=VARCHAR},
+    #{completeTime,jdbcType=VARCHAR},
+    #{state,jdbcType=VARCHAR},
+    #{prizeNum,jdbcType=VARCHAR},
+    #{prizeTime,jdbcType=VARCHAR},
+    SYSDATE()
+    )
+</insert>
+
+    <insert id="insertLikeLog" parameterType="io.renren.modules.gather.entity.PrizeEntity">
+        INSERT INTO tb_like_log(id,
+        user_id,
+        create_time)
+        VALUES(
+        #{id,jdbcType=VARCHAR},
+        #{likes,jdbcType=VARCHAR},
+        SYSDATE()
+        )
+    </insert>
+
+    <update id="updatePrizeLog" parameterType="io.renren.modules.gather.entity.PrizeEntity">
+        update tb_prize_log
+        <set>
+            likes = concat(concat(#{likes,jdbcType=VARCHAR},','),IFNULL(likes,'')),
+            <if test="completeTime!=null">
+                complete_time = SYSDATE(),
+            </if>
+            update_time = SYSDATE()
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryLike" parameterType="java.lang.String" resultType="java.util.Map">
+        select t.id, t.activity_id, t.create_time, t.likes, t.user_id, t.update_time, t.state, t.prize_num, t.prize_time
+	,round(length(t.likes)/33,0) likeNum,u.headimgurl,u.username,u.mobile,ta.activity_name,IF(t.complete_time is not null,'已完成','未完成') complete_time  from tb_prize_log t
+		left join sys_user u on u.user_id=t.user_id
+		left join tb_activity ta on ta.id = t.activity_id
+        where activity_id = #{id,jdbcType=VARCHAR}
+        order by likeNum desc
+    </select>
+
+    <select id="queryLikeLog" parameterType="java.lang.String" resultType="java.util.Map">
+select t.*,u.headimgurl,u.username from tb_like_log t
+left join sys_user u on u.user_id = t.user_id
+where t.id =#{id,jdbcType=VARCHAR}
+order by create_time
+    </select>
+
+    <select id="queryList" parameterType="java.util.Map" resultType="java.util.Map">
+        select tg.*,count(tp.activity_id) people_num from tb_gather tg
+        left join tb_prize_log tp on tg.id=tp.activity_id
+        group by tg.id
+        order by tg.create_time desc
+    </select>
+
+    <select id="queryPrizeLog" parameterType="java.lang.String" resultType="java.util.Map">
+        select t.*,round(length(t.likes)/33,0) likeNum,u.headimgurl,u.username from tb_prize_log t
+        left join sys_user u on u.user_id=t.user_id
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryLikeTime" parameterType="io.renren.modules.gather.entity.PrizeEntity" resultType="java.util.Map">
+        select max(t.create_time) create_time,tl.prize_time from tb_prize_log tl
+        left join tb_like_log  t on t.id = tl.id and  t.user_id = #{likes,jdbcType=VARCHAR}
+        left join sys_user u on u.user_id=tl.user_id
+        where   tl.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryGatherByMobileAndActivityId" parameterType="io.renren.modules.order.model.Order" resultType="java.util.Map">
+		select
+		t.*,u.headimgurl,u.username,ta.activity_name,ta.thumbnail,ta.target_num,count(tp.id) like_num
+		from tb_prize_log t
+		left join sys_user u on u.user_id=t.user_id
+		left join tb_gather ta on ta.id = t.activity_id
+		left join tb_like_log tp on tp.id = t.id
+        where u.mobile = #{mobile,jdbcType=VARCHAR}
+		group by t.id
+    </select>
+
+    <update id="releasePrize" parameterType="java.lang.String">
+        update tb_gather
+        <set>
+            prize_left = prize_left - 1
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

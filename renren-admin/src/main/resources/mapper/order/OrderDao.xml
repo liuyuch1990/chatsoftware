@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.order.dao.OrderDao">
+
+    <insert id="insert" parameterType="io.renren.modules.order.model.Order">
+        insert into tb_order (order_id,order_type,activity_id,user_id,from_user,red_packets,question1,question2,question3,question4,question5, create_time,total_price,group_id,order_status)
+        value(
+          #{orderId,jdbcType=VARCHAR},
+          #{orderType,jdbcType=VARCHAR},
+          #{activityId,jdbcType=VARCHAR},
+          #{user_id,jdbcType=VARCHAR},
+          #{from_user,jdbcType=VARCHAR},
+          #{red_packets,jdbcType=VARCHAR},
+          #{question1,jdbcType=VARCHAR},
+          #{question2,jdbcType=VARCHAR},
+          #{question3,jdbcType=VARCHAR},
+          #{question4,jdbcType=VARCHAR},
+          #{question5,jdbcType=VARCHAR},
+           SYSDATE(),
+          #{total_price,jdbcType=VARCHAR},
+          #{groupId,jdbcType=VARCHAR},
+          #{orderStatus,jdbcType=VARCHAR}
+          )
+    </insert>
+	<select id="queryById" parameterType="java.lang.String" resultType="io.renren.modules.order.model.Order">
+		select * from tb_order where order_id = #{order_id}
+	</select>
+
+	<select id="queryByOrderId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select * from tb_order where order_id = #{order_id}
+	</select>
+
+	<select id="queryByActivtyId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select tb.order_id, tb.create_time, tb.update_time, tb.user_id, tb.order_status, tb.activity_id,  if(cast(tb.total_price as DECIMAL)=tba.floor_price,'已砍至底价',tb.total_price) total_price, tb.from_user, tb.red_packets, tb.user_type, tb.group_id, tb.order_type
+	,u.username,u.headimgurl,u.mobile,td.activity_name,sd.value from tb_order tb
+  left join sys_user u on u.user_id=tb.user_id
+  left join tb_activity td on tb.activity_id = td.id
+  left join tb_bargin tba on tba.id = tb.activity_id
+  left join sys_dict sd on sd.code = tb.order_status and sd.type='wxpay'
+  where tb.activity_id = #{activityId}
+  order by tb.create_time desc
+	</select>
+
+	<select id="queryByGroupId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select tb.*,u.username,u.headimgurl,u.mobile,td.activity_name from tb_order tb
+		left join sys_user u on u.user_id=tb.user_id
+		left join tb_activity td on tb.activity_id = td.id
+		where tb.group_id = #{groupId}
+	</select>
+
+
+	<select id="getOrderByUserId" parameterType="io.renren.modules.order.model.Order" resultType="java.util.HashMap">
+		select
+        t.order_id, t.create_time, t.update_time, t.user_id, sd.value order_status, t.activity_id,  t.total_price, t.from_user, t.red_packets, t.user_type, t.group_id, t.order_type
+		,u.headimgurl
+		from tb_order t
+		left join sys_user u on u.user_id=t.user_id
+		left join sys_dict sd on sd.code = t.order_status and sd.type='wxpay'
+		where t.user_id = #{user_id,jdbcType=VARCHAR} and t.activity_id=#{activityId,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="getOrderByFromUserId" parameterType="io.renren.modules.order.model.Order" resultType="java.util.HashMap">
+		select
+        t.order_id, t.create_time, t.update_time, t.user_id, sd.value order_status, t.activity_id,  t.total_price, t.from_user, t.red_packets, t.user_type, t.group_id, t.order_type
+		,u.headimgurl
+		from tb_order t
+		left join sys_user u on u.user_id=t.from_user
+		left join sys_dict sd on sd.code = t.order_status and sd.type='wxpay'
+		where t.from_user = #{from_user,jdbcType=VARCHAR} and t.activity_id=#{activityId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getOrderByUserIdAndActivityType" parameterType="io.renren.modules.order.model.Order" resultType="java.util.HashMap">
+		select
+		t.*,u.headimgurl,u.username,ta.*
+		from tb_order t
+		left join sys_user u on u.user_id=t.user_id
+		left join tb_activity ta on ta.id = t.activity_id
+		where u.mobile = #{mobile,jdbcType=VARCHAR} and t.order_type=#{orderType,jdbcType=VARCHAR}
+	</select>
+
+	<update id="edit" parameterType="io.renren.modules.order.model.OrderInfo">
+		update tb_order
+		<set>
+			<if test="total_price != null">
+				total_price = #{total_price,jdbcType=VARCHAR},
+			</if>
+			<if test="order_status != null">
+				order_status = #{order_status,jdbcType=VARCHAR},
+			</if>
+				update_time = SYSDATE()
+		</set>
+		where
+		<if test="order_id != null">
+			order_id = #{order_id,jdbcType=VARCHAR}
+		</if>
+		<if test="group_id != null">
+			group_id = #{group_id,jdbcType=VARCHAR}
+		</if>
+
+	</update>
+</mapper>

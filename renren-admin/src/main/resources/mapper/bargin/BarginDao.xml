@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.bargin.dao.BarginDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.bargin.entity.BarginEntity" id="barginMap">
+        <result property="id" column="id"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="floorPrice" column="floor_price"/>
+        <result property="minReduction" column="min_reduction"/>
+        <result property="maxReduction" column="max_reduction"/>
+        <result property="restrictTime" column="restrict_time"/>
+        <result property="prizeDescription" column="prize_description"/>
+        <result property="activityRule" column="activity_rule"/>
+        <result property="prizeInfo" column="prize_info"/>
+        <result property="companyDescription" column="company_description"/>
+        <result property="discount" column="discount"/>
+        <result property="qrImg" column="qr_img"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="headImage" column="head_image"/>
+        <result property="longitude" column="longitude"/>
+        <result property="phone" column="phone"/>
+        <result property="latitude" column="latitude"/>
+        <result property="footImage" column="foot_image"/>
+        <result property="bgImage" column="bg_image"/>
+        <result property="gift" column="gift"/>
+        <result property="prizeLeft" column="prize_left"/>
+        <result property="prizeNum" column="prize_num"/>
+    </resultMap>
+
+    <insert id="insertBarginLog" parameterType="io.renren.modules.order.model.Order">
+        INSERT INTO tb_bargin_log(id,
+        bargin_price,
+        user_id,
+        create_time)
+        VALUES(
+        #{orderId,jdbcType=VARCHAR},
+        #{total_price,jdbcType=VARCHAR},
+        #{user_id,jdbcType=VARCHAR},
+        SYSDATE()
+        )
+    </insert>
+
+
+    <insert id="insertBarginEntity" parameterType="io.renren.modules.bargin.entity.BarginEntity">
+INSERT INTO tb_bargin(id,
+	activity_name,
+	start_time,
+	end_time,
+	thumbnail,
+	original_price,
+	floor_price,
+	min_reduction,
+	max_reduction,
+	restrict_time,
+	prize_description,
+	activity_rule,
+	prize_info,
+	company_description,
+	company_name,
+	discount,
+	qr_img,
+	create_time,
+	head_image,
+	longitude,
+	phone,
+	latitude,
+	foot_image,
+	bg_image,
+	gift,
+	gift_name,
+	prize_left,
+	prize_num,
+	address,
+	question1,
+	question2,
+	question3,
+	question4,
+	question5,
+	bargin_num)
+VALUES
+	(
+		#{id,jdbcType=VARCHAR},
+#{activityName,jdbcType=VARCHAR},
+#{startTime,jdbcType=VARCHAR},
+#{endTime,jdbcType=VARCHAR},
+#{thumbnail,jdbcType=VARCHAR},
+#{originalPrice,jdbcType=DECIMAL},
+#{floorPrice,jdbcType=DECIMAL},
+#{minReduction,jdbcType=DECIMAL},
+#{maxReduction,jdbcType=DECIMAL},
+#{restrictTime,jdbcType=INTEGER},
+#{prizeDescription,jdbcType=VARCHAR},
+#{activityRule,jdbcType=VARCHAR},
+#{prizeInfo,jdbcType=VARCHAR},
+#{companyDescription,jdbcType=VARCHAR},
+#{companyName,jdbcType=VARCHAR},
+#{discount,jdbcType=VARCHAR},
+#{qrImg,jdbcType=VARCHAR},
+SYSDATE(),
+#{headImage,jdbcType=VARCHAR},
+#{longitude,jdbcType=VARCHAR},
+#{phone,jdbcType=VARCHAR},
+#{latitude,jdbcType=VARCHAR},
+#{footImage,jdbcType=VARCHAR},
+#{bgImage,jdbcType=VARCHAR},
+#{gift,jdbcType=VARCHAR},
+#{giftName,jdbcType=VARCHAR},
+#{prizeLeft,jdbcType=INTEGER},
+#{prizeNum,jdbcType=INTEGER},
+#{address,jdbcType=VARCHAR},
+#{question1,jdbcType=VARCHAR},
+#{question2,jdbcType=VARCHAR},
+#{question3,jdbcType=VARCHAR},
+#{question4,jdbcType=VARCHAR},
+#{question5,jdbcType=VARCHAR},
+#{barginNum,jdbcType=INTEGER}
+	)
+    </insert>
+
+    <update id="updateBarginEntity" parameterType="io.renren.modules.bargin.entity.BarginEntity">
+
+        UPDATE
+        tb_bargin
+        <set>
+            <if test="activityName!= null">
+                activity_name=#{activityName,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime!= null">
+                start_time=#{startTime,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime!= null">
+                end_time=#{endTime,jdbcType=VARCHAR},
+            </if>
+            <if test="thumbnail!= null">
+                thumbnail=#{thumbnail,jdbcType=VARCHAR},
+            </if>
+            <if test="originalPrice!= null">
+                original_price=#{originalPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="floorPrice!= null">
+                floor_price=#{floorPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="minReduction!= null">
+                min_reduction=#{minReduction,jdbcType=DECIMAL},
+            </if>
+            <if test="maxReduction!= null">
+                max_reduction=#{maxReduction,jdbcType=DECIMAL},
+            </if>
+            <if test="restrictTime!= null">
+                restrict_time=#{restrictTime,jdbcType=INTEGER},
+            </if>
+            <if test="prizeDescription!= null">
+                prize_description=#{prizeDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="activityRule!= null">
+                activity_rule=#{activityRule,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeInfo!= null">
+                prize_info=#{prizeInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="companyDescription!= null">
+                company_description=#{companyDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName!= null">
+                company_name=#{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="discount!= null">
+                discount=#{discount,jdbcType=VARCHAR},
+            </if>
+            <if test="qrImg!= null">
+                qr_img=#{qrImg,jdbcType=VARCHAR},
+            </if>
+            <if test="headImage!= null">
+                head_image=#{headImage,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude!= null">
+                longitude=#{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="phone!= null">
+                phone=#{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude!= null">
+                latitude=#{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="footImage!= null">
+                foot_image=#{footImage,jdbcType=VARCHAR},
+            </if>
+            <if test="bgImage!= null">
+                bg_image=#{bgImage,jdbcType=VARCHAR},
+            </if>
+            <if test="gift!= null">
+                gift=#{gift,jdbcType=VARCHAR},
+            </if>
+            <if test="giftName!= null">
+                gift_name=#{giftName,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeLeft!= null">
+                prize_left=#{prizeLeft,jdbcType=INTEGER},
+            </if>
+            <if test="prizeNum!= null">
+                prize_num=#{prizeNum,jdbcType=INTEGER},
+            </if>
+            <if test="address!= null">
+                address=#{address,jdbcType=VARCHAR},
+            </if>
+            <if test="question1!= null">
+                question1=#{question1,jdbcType=VARCHAR},
+            </if>
+            <if test="question2!= null">
+                question2=#{question2,jdbcType=VARCHAR},
+            </if>
+            <if test="question3!= null">
+                question3=#{question3,jdbcType=VARCHAR},
+            </if>
+            <if test="question4!= null">
+                question4=#{question4,jdbcType=VARCHAR},
+            </if>
+            <if test="question5!= null">
+                question5=#{question5,jdbcType=VARCHAR},
+            </if>
+            <if test="barginNum!= null">
+                bargin_num=#{barginNum,jdbcType=INTEGER},
+            </if>
+            update_time=SYSDATE()
+        </set>
+        WHERE
+        id=#{id,jdbcType=VARCHAR}
+
+    </update>
+
+    <select id="queryList" parameterType="java.lang.String" resultType="java.util.Map">
+		select t.*,count(ord.order_id) order_num,ifnull(sum(ord.total_price),0) total_price from tb_bargin t
+		left join tb_order ord on ord.activity_id = t.id and ord.order_status = 3
+		where t.create_user = #{id,jdbcType=VARCHAR}
+		group by t.id
+		order by t.create_time desc
+    </select>
+
+
+    <select id="queryById" parameterType="java.lang.String" resultType="io.renren.modules.bargin.entity.BarginEntity">
+     SELECT t.id,t.activity_name,t.start_time,t.end_time,t.thumbnail,t.original_price,t.floor_price,t.min_reduction,t.max_reduction,t.restrict_time,
+     t.prize_description,t.activity_rule,t.prize_info,t.company_description,t.discount,t.qr_img,t.create_time,t.update_time,t.head_image,t.longitude,t.phone,
+     t.latitude,t.foot_image,t.bg_image,t.gift,t.prize_left,t.prize_num,t.address,t.bargin_num,t.question1,t.question2,t.question3,t.question4,ta.like_num,ta.use_num,ta.view_num,ta.share_num,tl.likeflag
+	FROM tb_bargin t
+	left join tb_activity ta on ta.id=t.id
+	LEFT JOIN tb_like tl ON tl.activity_id=t.id
+     WHERE  t.id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryBarginLog" parameterType="java.lang.String" resultType="java.util.Map">
+        select tb.*,t.total_price,tba.original_price,u.headimgurl,u.username from tb_bargin_log tb
+  left join tb_order   t on tb.id = t.order_id
+  left join tb_bargin tba on tba.id = t.activity_id
+  left join sys_user u on u.user_id=tb.user_id
+  where tb.id= #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryMaxTime" parameterType="io.renren.modules.order.model.Order" resultType="java.util.Map">
+        select max(tb.create_time) max_time, tb.* from tb_bargin_log tb
+        where tb.id= #{orderId,jdbcType=VARCHAR} and tb.user_id = #{user_id,jdbcType=VARCHAR}
+    </select>
+
+    <update id="releaseBargin" parameterType="java.lang.String">
+        update tb_bargin
+        <set>
+            prize_left = prize_left - 1
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

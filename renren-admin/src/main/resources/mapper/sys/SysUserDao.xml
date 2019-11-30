@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.SysUserDao">
+	
+	<!-- 查询用户的所有权限 -->
+	<select id="queryAllPerms" resultType="string">
+		select m.perms from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		where ur.user_id = #{userId}
+	</select>
+	
+	<!-- 查询用户的所有菜单ID --> 
+	<select id="queryAllMenuId" resultType="long">
+		select distinct rm.menu_id from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+		where ur.user_id = #{userId}
+	</select>
+
+
+	<select id="queryById" parameterType="java.lang.String" resultType="io.renren.modules.sys.entity.SysUserEntity">
+		select * from sys_user where user_id = #{id}
+	</select>
+
+	<select id="queryByOpenId" parameterType="java.lang.String" resultType="io.renren.modules.sys.entity.SysUserEntity">
+		select * from sys_user where open_id = #{id}
+	</select>
+
+	<select id="queryByAppOpenId" parameterType="java.lang.String" resultType="io.renren.modules.sys.entity.SysUserEntity">
+		select * from sys_user where app_open_id = #{id}
+	</select>
+
+	<select id="queryByMobile" parameterType="java.lang.String" resultType="io.renren.modules.sys.entity.SysUserEntity">
+		select * from sys_user where mobile = #{mobile}
+	</select>
+
+	<select id="queryByUserName" parameterType="io.renren.modules.sys.entity.SysUserEntity" resultType="io.renren.modules.sys.entity.SysUserEntity">
+		select * from sys_user where username = #{username}
+	</select>
+
+	<insert id="insertUser" parameterType="io.renren.modules.sys.entity.SysUserEntity">
+		INSERT INTO sys_user (
+user_id,
+username,
+password,
+salt,
+email,
+mobile,
+status,
+open_id,
+language,
+nickname,
+headimgurl,
+province,
+subscribetime,
+city,
+sex,
+unionid,
+app_open_id,
+end_time,
+company_industry,
+company_name,
+company_Province,
+company_city,
+create_time
+)
+VALUES
+(
+#{userId,jdbcType=VARCHAR},
+#{username,jdbcType=VARCHAR},
+#{password,jdbcType=VARCHAR},
+#{salt,jdbcType=VARCHAR},
+#{email,jdbcType=VARCHAR},
+#{mobile,jdbcType=VARCHAR},
+#{status,jdbcType=INTEGER},
+#{openId,jdbcType=VARCHAR},
+#{language,jdbcType=VARCHAR},
+#{nickname,jdbcType=VARCHAR},
+#{headimgurl,jdbcType=VARCHAR},
+#{province,jdbcType=VARCHAR},
+#{subscribetime,jdbcType=VARCHAR},
+#{city,jdbcType=VARCHAR},
+#{sex,jdbcType=VARCHAR},
+#{unionid,jdbcType=VARCHAR},
+#{appOpenId,jdbcType=VARCHAR},
+#{endTime,jdbcType=VARCHAR},
+#{companyIndustry,jdbcType=VARCHAR},
+#{companyName,jdbcType=VARCHAR},
+#{companyProvince,jdbcType=VARCHAR},
+#{companyCity,jdbcType=VARCHAR},
+		SYSDATE()
+		)
+	</insert>
+
+	<update id="updateUser" parameterType="io.renren.modules.sys.entity.SysUserEntity">
+		update sys_user
+		<set>
+			<if test="nickname!= null">
+				nickname =  #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="headimgurl!= null">
+				headimgurl =  #{headimgurl,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile!= null">
+				mobile =  #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="status!= null">
+				status =  #{status,jdbcType=INTEGER},
+			</if>
+			<if test="password!= null">
+				password =  #{password,jdbcType=INTEGER},
+			</if>
+			<if test="username!= null">
+				username =  #{username,jdbcType=VARCHAR},
+			</if>
+			update_time =  SYSDATE()
+		</set>
+		where user_id = #{userId,jdbcType=VARCHAR}
+
+	</update>
+
+
+	<select id="queryForUsers" resultType="io.renren.modules.sys.entity.SysUserEntity">
+	SELECT
+     *
+	from sys_user
+	WHERE user_id IN
+	<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+		#{id}
+	</foreach>
+	</select>
+
+    <select id="queryAllUsers" resultType="io.renren.modules.sys.entity.SysUserEntity">
+        SELECT
+        *
+        from sys_user
+    </select>
+</mapper>
