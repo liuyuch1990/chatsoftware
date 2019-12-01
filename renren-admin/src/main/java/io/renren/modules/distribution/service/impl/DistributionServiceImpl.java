@@ -9,6 +9,7 @@ import io.renren.modules.gather.entity.GatherEntity;
 import io.renren.modules.groupon.entity.GrouponEntity;
 import io.renren.modules.lottery.entity.LotteryEntity;
 import io.renren.modules.activity.entity.ActivityEntity;
+import io.renren.modules.sys.entity.TextEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ public class DistributionServiceImpl extends ServiceImpl<DistributionDao, Distri
         return distributionDao.queryListByPage(params);
     }
 
-    public List<ActivityEntity> queryActivity(Map<String, Object> params){
+    public List<ActivityEntity> queryActivity(Map<String, Object> params) {
         return distributionDao.queryActivity(params);
     }
 
@@ -182,8 +183,20 @@ public class DistributionServiceImpl extends ServiceImpl<DistributionDao, Distri
         return distributionDao.updateActivity(activityEntity);
     }
 
+    public List<TextEntity> queryTextByName(String name) {
+        return distributionDao.queryTextByName(name);
+    }
+
+    public int insertTexts(List<TextEntity> Textlist) {
+        return distributionDao.insertTexts(Textlist);
+    }
+
     public int deleteActivity(List<String> ids) {
         return distributionDao.deleteActivity(ids);
+    }
+
+    public int deleteText() {
+        return distributionDao.deleteText();
     }
 
     public int release(String id) {

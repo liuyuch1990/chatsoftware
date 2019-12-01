@@ -22,6 +22,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -187,5 +188,12 @@ public class DateUtils {
     public static Date addDateYears(Date date, int years) {
         DateTime dateTime = new DateTime(date);
         return dateTime.plusYears(years).toDate();
+    }
+
+    public static String longToString(Long date) {
+         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+         Date date1 = new Date(date);
+         String str = dateFormat.format(date);
+         return str;
     }
 }

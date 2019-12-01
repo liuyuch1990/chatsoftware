@@ -165,6 +165,15 @@ VALUES
 		limit #{pageNum},#{pageSize}
 	</select>
 
+	<select id="queryTextByName" parameterType="java.lang.String"
+			resultType="io.renren.modules.sys.entity.TextEntity">
+		select * from tb_text where name=#{name,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteText">
+		delete from tb_text
+	</delete>
+
     <update id="rollback" parameterType="java.lang.String">
         update tb_distribution
         <set>
@@ -192,6 +201,21 @@ VALUES
 		</set>
 		where id = #{id,jdbcType=VARCHAR}
 	</update>
+
+	<insert id="insertTexts" parameterType="java.util.List">
+		<selectKey resultType ="java.lang.Integer" keyProperty= "id"
+				   order= "AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey >
+		INSERT INTO tb_text
+		(name, text)
+		values
+		<foreach collection ="list" item="texts" index= "index" separator =",">
+			(
+			#{texts.name}, #{texts.text}
+			)
+		</foreach >
+	</insert>
 
 	<delete id="deleteActivity"  parameterType = "java.util.List">
 	delete from tb_activity  where  id in

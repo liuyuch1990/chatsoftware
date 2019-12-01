@@ -11,7 +11,7 @@ public class Constants {
      */
     public static final String PAPPID = "wxd8ea2d8f88363b1f";
 
-    public static final String PTAPPID = "wx2517d7a8920ab213";
+    public static final String PTAPPID = "wx6632e715b5326c9a";
 
 
     public static final String SIGN = "HJJI8970OKMNHY726YTGHJI908YHNBGT";
@@ -26,7 +26,7 @@ public class Constants {
     /**
      * 微信公众号SERCRET
      */
-    public static final String PSERCRET = "03d04cb32236f9a95d4656863310b317";
+    public static final String PSERCRET = "9145b5450f09b2947894b1c2e640f5e4";
 
     /**
      * 微信单次货物购买积分
@@ -52,7 +52,7 @@ public class Constants {
 
     public static final String URL_UNIFIED_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
-    public static final String DOMAIN = "https://wx.sharkmeida.cn";
+    public static final String DOMAIN = "https://sq.sharkmeida.cn";
 
     public static final String URL_NOTIFY = Constants.DOMAIN + "/api/wxpay/payCallback";
 
@@ -105,4 +105,24 @@ public class Constants {
     public static final String SMSSIGN= "小象社交新营销";
 
     public static final String SMSINTERVAL= "2";
+
+    public static final String RESP_MESSAGE_TYPE_TEXT = "text";
+    public static final Object REQ_MESSAGE_TYPE_TEXT = "text";
+    public static final Object REQ_MESSAGE_TYPE_IMAGE = "image";
+    public static final Object REQ_MESSAGE_TYPE_VOICE = "voice";
+    public static final Object REQ_MESSAGE_TYPE_VIDEO = "video";
+    public static final Object REQ_MESSAGE_TYPE_LOCATION = "location";
+    public static final Object REQ_MESSAGE_TYPE_LINK = "link";
+    public static final Object REQ_MESSAGE_TYPE_EVENT = "event";
+    public static final Object EVENT_TYPE_SUBSCRIBE = "SUBSCRIBE";
+    public static final Object EVENT_TYPE_UNSUBSCRIBE = "UNSUBSCRIBE";
+    public static final Object EVENT_TYPE_SCAN = "SCAN";
+    public static final Object EVENT_TYPE_LOCATION = "LOCATION";
+    public static final Object EVENT_TYPE_CLICK = "CLICK";
+
+    public static final String FromUserName = "FromUserName";
+    public static final String ToUserName = "ToUserName";
+    public static final String MsgType = "MsgType";
+    public static final String Content = "Content";
+    public static final String Event = "Event";
 }

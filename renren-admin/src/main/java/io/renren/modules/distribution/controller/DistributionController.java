@@ -1,5 +1,6 @@
 package io.renren.modules.distribution.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -16,10 +17,7 @@ import io.renren.modules.distribution.service.DistributionService;
 import io.renren.modules.order.model.Order;
 import io.renren.modules.order.service.OrderService;
 
-import io.renren.modules.sys.entity.GoodActivity;
-import io.renren.modules.sys.entity.ReturnCodeEnum;
-import io.renren.modules.sys.entity.ReturnResult;
-import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.entity.*;
 import io.renren.modules.sys.service.SysUserService;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -236,25 +234,26 @@ public class DistributionController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnResult add(@RequestParam("upfile") MultipartFile[] files) {
-        String[] imgs = new String[files.length];
+    @Transactional
+    public ReturnResult add(@RequestParam("file") MultipartFile files) {
+        String imgs = "";
+        String fileName  = "";
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
 
         Map<String, Object> map = new HashedMap();
         try {
             //判断file数组不能为空并且长度大于0
-            if (files != null && files.length > 0) {
-                //循环获取file数组中得文件
-                for (int i = 0; i < files.length; i++) {
-                    MultipartFile file = files[i];
-                    //保存文件
-                    String fileName = UploadUtils.saveFile(file, filePath, UUID.randomUUID().toString());
-                    imgs[i] = url + fileName;
-                }
+            if (files != null) {
+                //保存文件
+                fileName = UploadUtils.saveFile(files, filePath, UUID.randomUUID().toString());
+                imgs = url + fileName;
             }
+            List<TextEntity> textEntityList = ReadExcelUtil.sortList(filePath + File.separator +  fileName);
+            distributionService.deleteText();
+            distributionService.insertTexts(textEntityList);
             map.put("status", "success");
             map.put("msg", "上传成功");
-            map.put("data", imgs[0]);
+            map.put("data", imgs);
             result.setResult(map);
             return result;
         } catch (Exception e) {

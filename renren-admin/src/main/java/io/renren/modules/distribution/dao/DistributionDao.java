@@ -7,6 +7,7 @@ import io.renren.modules.distribution.entity.Distribution;
 import io.renren.modules.gather.entity.GatherEntity;
 import io.renren.modules.groupon.entity.GrouponEntity;
 import io.renren.modules.activity.entity.ActivityEntity;
+import io.renren.modules.sys.entity.TextEntity;
 import org.apache.ibatis.annotations.Param;
 import org.mapstruct.Mapper;
 
@@ -25,6 +26,12 @@ public interface DistributionDao extends BaseMapper<Distribution> {
 
 
     List<Distribution> queryList(Map<String, Object> params);
+
+    List<TextEntity> queryTextByName(String name);
+
+    int insertTexts(List<TextEntity> texts);
+
+    int deleteText();
 
     List<Distribution> queryListByPage(Map<String, Object> params);
 

@@ -10,6 +10,7 @@ import io.renren.modules.gather.entity.GatherEntity;
 import io.renren.modules.groupon.entity.GrouponEntity;
 import io.renren.modules.lottery.entity.LotteryEntity;
 import io.renren.modules.activity.entity.ActivityEntity;
+import io.renren.modules.sys.entity.TextEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,12 @@ public interface DistributionService extends IService<Distribution> {
     List<Distribution> queryList(Map<String, Object> params);
 
     List<Distribution> queryListByPage(Map<String, Object> params);
+
+    int deleteText();
+
+    int insertTexts(List<TextEntity> texts);
+
+    List<TextEntity> queryTextByName(String name);
 
     List<ActivityEntity> queryActivity(Map<String, Object> params);
 

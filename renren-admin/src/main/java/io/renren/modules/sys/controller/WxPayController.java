@@ -16,6 +16,7 @@ import io.renren.modules.sys.entity.ReturnCodeEnum;
 import io.renren.modules.sys.entity.ReturnResult;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysUserService;
+import io.renren.modules.sys.service.impl.WeChatService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.map.HashedMap;
@@ -52,6 +53,9 @@ public class WxPayController {
     @Autowired
     SysUserService sysUserService;
 
+    @Autowired
+    WeChatService weChatService;
+
     @RequestMapping(value = "/getServer",method=RequestMethod.GET)
     public void login(HttpServletRequest request,HttpServletResponse response) {
         System.out.println("success");
@@ -72,6 +76,16 @@ public class WxPayController {
             out.close();
         }
     }
+
+    /**
+     * 此处是处理微信服务器的消息转发的
+     */
+    @RequestMapping(value = "/getServer",method=RequestMethod.POST)
+    public String processMsg(HttpServletRequest request,HttpServletResponse response) {
+        // 调用核心服务类接收处理请求
+        return weChatService.processRequest(request);
+    }
+
     @RequestMapping(value = "/prepay", method = RequestMethod.POST)
     @ResponseBody
     public ReturnResult prePay(@RequestParam(required = true) String user_id,
