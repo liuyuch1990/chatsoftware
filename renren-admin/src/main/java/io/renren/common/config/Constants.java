@@ -114,8 +114,8 @@ public class Constants {
     public static final Object REQ_MESSAGE_TYPE_LOCATION = "location";
     public static final Object REQ_MESSAGE_TYPE_LINK = "link";
     public static final Object REQ_MESSAGE_TYPE_EVENT = "event";
-    public static final Object EVENT_TYPE_SUBSCRIBE = "SUBSCRIBE";
-    public static final Object EVENT_TYPE_UNSUBSCRIBE = "UNSUBSCRIBE";
+    public static final Object EVENT_TYPE_SUBSCRIBE = "subscribe";
+    public static final Object EVENT_TYPE_UNSUBSCRIBE = "unsubscribe";
     public static final Object EVENT_TYPE_SCAN = "SCAN";
     public static final Object EVENT_TYPE_LOCATION = "LOCATION";
     public static final Object EVENT_TYPE_CLICK = "CLICK";

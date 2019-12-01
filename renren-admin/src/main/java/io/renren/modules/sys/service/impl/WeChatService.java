@@ -34,6 +34,9 @@ public class WeChatService {
                 for(TextEntity text:textEntityList){
                     respXml = WxUtil.sendTextMsg(requestMap, text.getText());
                 }
+                if(textEntityList.size()==0){
+                    respXml = WxUtil.sendTextMsg(requestMap, "查无此代理信息");
+                }
             }
             // 图片消息
             else if (msgType.equals(Constants.REQ_MESSAGE_TYPE_IMAGE)) {
@@ -66,7 +69,7 @@ public class WeChatService {
                 String eventType = (String) requestMap.get(Constants.Event);
                 // 关注
                 if (eventType.equals(Constants.EVENT_TYPE_SUBSCRIBE)) {
-                    respContent = "谢谢您的关注！";
+                    respContent = "感谢您对【Tsia水晶饰品】的关注，最新最精彩的内容将在第一时间分享给您！"+"\r\n"+"输入姓名，即可查询代理商信息。";
                     respXml = WxUtil.sendTextMsg(requestMap, respContent);
                 }
                 // 取消关注
