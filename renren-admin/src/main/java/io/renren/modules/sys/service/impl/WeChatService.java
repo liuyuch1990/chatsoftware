@@ -30,10 +30,17 @@ public class WeChatService {
             String mes = null;
             // 文本消息
             if (msgType.equals(Constants.REQ_MESSAGE_TYPE_TEXT)) {
+                String temp = "";
                 List<TextEntity> textEntityList = distributionDao.queryTextByName((String) requestMap.get(Constants.Content));
-                for(TextEntity text:textEntityList){
-                    respXml = WxUtil.sendTextMsg(requestMap, text.getText());
+                for(int i=0;i<textEntityList.size();i++){
+                    if("".equals(temp)){
+                        temp = textEntityList.get(i).getText();
+                    }else{
+                        temp = temp + "\r\n" + textEntityList.get(i).getText();
+                    }
+
                 }
+                respXml = WxUtil.sendTextMsg(requestMap, temp);
                 if(textEntityList.size()==0){
                     respXml = WxUtil.sendTextMsg(requestMap, "查无此代理信息");
                 }
