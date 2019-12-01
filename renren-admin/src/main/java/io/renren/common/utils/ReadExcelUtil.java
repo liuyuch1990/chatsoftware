@@ -171,7 +171,7 @@ public class ReadExcelUtil {
             String tempText = "";
             textEntity.setName(se.get(i).get(0));
             for(int j=0;j<se.get(i).size();j++){
-                tempText = tempText + titlelst.get(j)+":" + se.get(i).get(j) + "|";
+                tempText = tempText + titlelst.get(j)+":" + se.get(i).get(j) + "\r\n";
             }
             textEntity.setText(tempText);
             textEntityList.add(textEntity);
